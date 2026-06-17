@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manahil Khan — AI Security Researcher</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0E11;
+    --bg-card: #141920;
+    --bg-card-hover: #1A2129;
+    --line: #24303A;
+    --text: #E8EAED;
+    --text-dim: #8B98A5;
+    --accent: #39FF88;
+    --accent-dim: #1F7A47;
+    --amber: #FFB454;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', sans-serif;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.6;
+    font-size:16px;
+  }
+
+  ::selection{ background:var(--accent); color:#0B0E11; }
+
+  a{ color:var(--accent); text-decoration:none; }
+  a:hover{ text-decoration:underline; }
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+  }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background:rgba(11,14,17,0.85);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    max-width:880px; margin:0 auto; padding:16px 24px;
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .logo{
+    font-family:var(--mono); font-weight:800; font-size:1rem;
+    color:var(--text); letter-spacing:0.02em;
+  }
+  .logo span{ color:var(--accent); }
+  nav ul{
+    display:flex; gap:28px; list-style:none;
+    font-family:var(--mono); font-size:0.82rem;
+  }
+  nav a{ color:var(--text-dim); }
+  nav a:hover{ color:var(--accent); text-decoration:none; }
+  .nav-toggle{ display:none; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 64px;
+    border-bottom:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    top:-180px; left:50%;
+    width:600px; height:360px;
+    background:radial-gradient(ellipse at center, rgba(57,255,136,0.10), transparent 70%);
+    transform:translateX(-50%);
+    pointer-events:none;
+  }
+  .hero .wrap{ position:relative; z-index:1; }
+  .terminal{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 24px 60px -30px rgba(57,255,136,0.08);
+  }
+  .terminal-bar{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 14px;
+    border-bottom:1px solid var(--line);
+    background:#10151B;
+  }
+  .dot{ width:11px; height:11px; border-radius:50%; }
+  .dot.red{ background:#FF5F56; }
+  .dot.yellow{ background:#FFBD2E; }
+  .dot.green{ background:#27C93F; }
+  .terminal-title{
+    margin-left:8px; font-family:var(--mono); font-size:0.75rem; color:var(--text-dim);
+  }
+  .terminal-body{
+    padding:24px 28px 28px;
+    font-family:var(--mono);
+    font-size:0.92rem;
+  }
+  .terminal-body .line{
+    opacity:0; animation:fadeIn 0.4s forwards;
+    margin-bottom:6px;
+    white-space:pre-wrap;
+  }
+  .terminal-body .prompt{ color:var(--accent); }
+  .terminal-body .cmd{ color:var(--text); }
+  .terminal-body .out{ color:var(--text-dim); }
+  .terminal-body .ok{ color:var(--accent); }
+  .terminal-body .name-line{
+    font-size:1.9rem; font-weight:800; color:var(--text);
+    margin:14px 0 4px; letter-spacing:-0.01em;
+  }
+  .terminal-body .role-line{
+    color:var(--text-dim); font-size:0.95rem; margin-bottom:18px;
+  }
+  .terminal-body .role-line .accent{ color:var(--accent); }
+
+  @keyframes fadeIn{ to{ opacity:1; } }
+  @keyframes blink{ 50%{ opacity:0; } }
+  .cursor{
+    display:inline-block; width:8px; height:1.1em; background:var(--accent);
+    vertical-align:text-bottom; animation:blink 1s step-end infinite;
+  }
+
+  .hero-links{
+    margin-top:18px; padding-top:18px; border-top:1px solid var(--line);
+    display:flex; gap:18px; flex-wrap:wrap;
+    font-family:var(--mono); font-size:0.82rem;
+  }
+  .hero-links a{ color:var(--text-dim); display:inline-flex; align-items:center; gap:6px; }
+  .hero-links a:hover{ color:var(--accent); text-decoration:none; }
+  .hero-links .badge{
+    color:var(--amber); border:1px solid var(--amber);
+    padding:2px 8px; border-radius:4px; font-size:0.74rem;
+  }
+
+  .hero-summary{
+    margin-top:28px; color:var(--text-dim); font-size:1.02rem; max-width:680px;
+  }
+  .hero-summary strong{ color:var(--text); font-weight:600; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  section{ padding:56px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  .section-head{
+    display:flex; align-items:baseline; gap:14px; margin-bottom:32px;
+  }
+  .section-head .tag{
+    font-family:var(--mono); color:var(--accent); font-size:0.85rem;
+  }
+  .section-head h2{
+    font-family:var(--mono); font-size:1.3rem; font-weight:700; letter-spacing:-0.01em;
+  }
+  .section-head .rule{
+    flex:1; height:1px; background:var(--line);
+  }
+
+  /* ---------- ABOUT / SKILLS ---------- */
+  .skills-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:14px;
+  }
+  .skill-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:8px;
+    padding:16px 18px;
+    transition:border-color 0.2s, transform 0.2s;
+  }
+  .skill-card:hover{ border-color:var(--accent-dim); transform:translateY(-2px); }
+  .skill-card h3{
+    font-family:var(--mono); font-size:0.85rem; color:var(--accent);
+    margin-bottom:8px; font-weight:600;
+  }
+  .skill-card p{ color:var(--text-dim); font-size:0.88rem; line-height:1.7; }
+
+  /* ---------- PROJECTS ---------- */
+  .project-group{ margin-bottom:36px; }
+  .project-group:last-child{ margin-bottom:0; }
+  .group-label{
+    font-family:var(--mono); font-size:0.78rem; color:var(--text-dim);
+    text-transform:uppercase; letter-spacing:0.12em; margin-bottom:14px;
+  }
+  .group-intro{
+    color:var(--text-dim); font-size:0.92rem; max-width:680px;
+    margin:-4px 0 16px; line-height:1.7;
+  }
+  .project-card{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:8px;
+    padding:20px 22px; margin-bottom:12px;
+    transition:border-color 0.2s, background 0.2s, transform 0.2s, box-shadow 0.2s;
+  }
+  .project-card:hover{
+    border-color:var(--accent-dim);
+    background:var(--bg-card-hover);
+    transform:translateY(-2px);
+    box-shadow:0 12px 28px -18px rgba(57,255,136,0.35);
+  }
+  .project-card-head{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:12px;
+    margin-bottom:8px; flex-wrap:wrap;
+  }
+  .project-card h3{ font-size:1.04rem; font-weight:700; }
+  .project-card h3 a{ color:var(--text); }
+  .project-card h3 a:hover{ color:var(--accent); }
+  .project-link{
+    font-family:var(--mono); font-size:0.78rem; color:var(--text-dim);
+    border:1px solid var(--line); border-radius:4px; padding:3px 9px; white-space:nowrap;
+  }
+  .project-link:hover{ color:var(--accent); border-color:var(--accent-dim); text-decoration:none; }
+  .project-card p{ color:var(--text-dim); font-size:0.92rem; margin-bottom:12px; }
+  .tags{ display:flex; flex-wrap:wrap; gap:6px; }
+  .tags span{
+    font-family:var(--mono); font-size:0.72rem; color:var(--text-dim);
+    border:1px solid var(--line); border-radius:4px; padding:2px 8px;
+  }
+
+  /* ---------- EXPERIENCE ---------- */
+  .timeline{ position:relative; }
+  .exp-item{
+    position:relative; padding-left:28px; padding-bottom:28px;
+    border-left:1px solid var(--line); margin-left:6px;
+  }
+  .exp-item:last-child{ padding-bottom:0; }
+  .exp-item::before{
+    content:''; position:absolute; left:-5px; top:4px;
+    width:9px; height:9px; border-radius:50%;
+    background:var(--bg); border:2px solid var(--accent);
+  }
+  .exp-head{
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:2px;
+  }
+  .exp-head h3{ font-size:1rem; font-weight:700; }
+  .exp-head .dates{ font-family:var(--mono); font-size:0.78rem; color:var(--text-dim); }
+  .exp-role{ font-family:var(--mono); font-size:0.82rem; color:var(--accent); margin-bottom:8px; }
+  .exp-item ul{ list-style:none; color:var(--text-dim); font-size:0.92rem; }
+  .exp-item li{ margin-bottom:6px; padding-left:16px; position:relative; }
+  .exp-item li::before{
+    content:'›'; position:absolute; left:0; color:var(--accent-dim); font-family:var(--mono);
+  }
+
+  /* ---------- TECH STACK ---------- */
+  .tech-stack{ margin-bottom:36px; }
+  .tech-category{ margin-bottom:20px; }
+  .tech-category h4{
+    font-family:var(--mono); font-size:0.78rem; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.1em; margin-bottom:10px;
+  }
+  .tech-pills{ display:flex; flex-wrap:wrap; gap:7px; }
+  .tech-pill{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius:5px; padding:5px 12px;
+    font-family:var(--mono); font-size:0.78rem; color:var(--text-dim);
+    transition:border-color .15s, color .15s;
+  }
+  .tech-pill:hover{ border-color:var(--accent-dim); color:var(--text); }
+
+  /* ---------- ABOUT BIO ---------- */
+  .about-bio{ margin-bottom:8px; }
+  .about-bio p{
+    color:var(--text-dim); font-size:0.96rem; line-height:1.85;
+    margin-bottom:14px; max-width:780px;
+  }
+  .about-bio strong{ color:var(--text); font-weight:700; }
+
+  /* ---------- CERTS / CTF ---------- */
+  .cert-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .cert-btn{
+    display:flex; align-items:center; gap:10px;
+    width:100%;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:13px 16px;
+    font-family:var(--mono);
+    font-size:0.85rem;
+    font-weight:600;
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .15s, background .15s, transform .1s;
+    line-height:1.3;
+  }
+  .cert-btn::before{
+    content:'⊕';
+    color:var(--accent);
+    font-size:0.9rem;
+    flex-shrink:0;
+  }
+  .cert-btn:hover{
+    background:var(--bg-card-hover);
+    border-color:var(--accent-dim);
+    transform:translateY(-1px);
+  }
+  .cert-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+  /* modal cert body */
+  .cert-modal-issuer{ font-family:var(--mono); font-size:0.82rem; color:var(--accent); margin-bottom:12px; }
+  .cert-modal-meta{ font-family:var(--mono); font-size:0.78rem; color:var(--text-dim); margin-bottom:6px; }
+  .cert-modal-skills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+  .cert-modal-skills span{ background:rgba(57,255,136,0.07); border:1px solid var(--accent-dim); border-radius:4px; padding:4px 10px; font-family:var(--mono); font-size:0.74rem; color:var(--accent); }
+    background:var(--bg-card); border:1px solid var(--line); border-radius:8px;
+    padding:14px 16px; font-size:0.88rem;
+    transition:border-color 0.2s, transform 0.2s;
+  }
+  /* cert-item legacy removed */
+
+  /* ---------- CONTACT ---------- */
+  .contact-box{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:8px;
+    padding:36px; text-align:center;
+  }
+  .contact-box p{ color:var(--text-dim); margin-bottom:20px; }
+  .contact-actions{
+    display:flex; gap:12px; justify-content:center; flex-wrap:wrap;
+  }
+  .btn{
+    font-family:var(--mono); font-size:0.88rem; font-weight:600;
+    padding:11px 22px; border-radius:6px; border:1px solid var(--line);
+    color:var(--text); transition:all 0.15s;
+  }
+  .btn:hover{ text-decoration:none; }
+  .btn.primary{ background:var(--accent); color:#0B0E11; border-color:var(--accent); }
+  .btn.primary:hover{ background:#5dffa3; }
+  .btn.ghost:hover{ border-color:var(--accent); color:var(--accent); }
+
+  footer{
+    text-align:center; padding:32px 0; color:var(--text-dim);
+    font-family:var(--mono); font-size:0.78rem;
+  }
+
+  .featured-card{
+    background:linear-gradient(135deg, var(--bg-card) 0%, #161D27 100%);
+    border:1px solid var(--accent-dim);
+    border-radius:10px;
+    padding:28px 30px;
+    margin-bottom:14px;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 20px 50px -30px rgba(57,255,136,0.25);
+  }
+  .featured-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .featured-badge{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--mono); font-size:0.72rem; font-weight:700;
+    color:var(--accent); border:1px solid var(--accent-dim);
+    border-radius:4px; padding:3px 10px; letter-spacing:0.08em;
+    text-transform:uppercase; margin-bottom:14px;
+  }
+  .featured-card h3{
+    font-size:1.3rem; font-weight:800; color:var(--text); margin-bottom:6px;
+  }
+  .featured-card .subtitle{
+    color:var(--text-dim); font-size:0.92rem; margin-bottom:18px;
+    font-family:var(--mono);
+  }
+  .featured-card .links{
+    display:flex; gap:14px; margin-bottom:18px; flex-wrap:wrap;
+  }
+  .featured-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin:18px 0;
+  }
+  .featured-block{
+    background:rgba(255,255,255,0.02); border:1px solid var(--line); border-radius:8px;
+    padding:14px 16px;
+  }
+  .featured-block h4{
+    font-family:var(--mono); font-size:0.78rem; color:var(--accent);
+    text-transform:uppercase; letter-spacing:0.08em; margin-bottom:8px;
+  }
+  .featured-block p, .featured-block ul{ color:var(--text-dim); font-size:0.88rem; line-height:1.7; }
+  .featured-block ul{ list-style:none; }
+  .featured-block li{ padding-left:14px; position:relative; margin-bottom:4px; }
+  .featured-block li::before{ content:'›'; position:absolute; left:0; color:var(--accent-dim); font-family:var(--mono); }
+  .risk-table{
+    width:100%; border-collapse:collapse; margin:14px 0; font-size:0.82rem;
+  }
+  .risk-table th, .risk-table td{
+    border:1px solid var(--line); padding:8px 10px; text-align:left; color:var(--text-dim);
+  }
+  .risk-table th{
+    font-family:var(--mono); color:var(--accent); text-transform:uppercase; font-size:0.72rem; letter-spacing:0.06em;
+  }
+  .risk-table .crit{ color:var(--amber); font-weight:600; }
+  @media (max-width:680px){
+    .featured-grid{ grid-template-columns:1fr; }
+    .featured-card{ padding:20px 18px; }
+    .risk-table{ font-size:0.76rem; }
+    .risk-table th, .risk-table td{ padding:6px 6px; }
+  }
+
+  /* ---------- PROJECT LINK LIST ---------- */
+  .proj-link-item{
+    display:flex; align-items:center; gap:10px;
+    width:100%;
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:14px 18px;
+    margin-bottom:8px;
+    font-family:var(--mono);
+    font-size:0.92rem;
+    font-weight:600;
+    color:var(--text);
+    text-align:left;
+    cursor:pointer;
+    transition:border-color .15s, background .15s, transform .1s;
+  }
+  .proj-link-item::before{
+    content:'▸';
+    color:var(--accent);
+    font-size:0.8rem;
+    flex-shrink:0;
+  }
+  .proj-link-item:hover{
+    background:var(--bg-card-hover);
+    border-color:var(--accent-dim);
+    transform:translateX(2px);
+  }
+  .proj-link-item:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:2px;
+  }
+
+  /* ---------- PROJECT MODAL ---------- */
+  .modal-overlay{
+    display:none;
+    position:fixed; inset:0;
+    background:rgba(5,7,10,0.78);
+    backdrop-filter:blur(3px);
+    z-index:1000;
+    align-items:flex-start;
+    justify-content:center;
+    padding:5vh 16px;
+    overflow-y:auto;
+  }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{
+    background:var(--bg-card);
+    border:1px solid var(--accent-dim);
+    border-radius:10px;
+    max-width:780px;
+    width:100%;
+    padding:30px 32px;
+    position:relative;
+    box-shadow:0 30px 80px -30px rgba(0,0,0,0.6);
+    animation:modalIn .18s ease-out;
+  }
+  @keyframes modalIn{
+    from{ opacity:0; transform:translateY(12px) scale(0.98); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .modal-close{
+    position:absolute; top:14px; right:14px;
+    width:32px; height:32px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    background:transparent;
+    color:var(--text-dim);
+    font-size:1.1rem;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    transition:color .15s, border-color .15s;
+  }
+  .modal-close:hover{ color:var(--accent); border-color:var(--accent-dim); }
+  .modal-box h3{
+    font-size:1.15rem; font-weight:800; color:var(--text);
+    margin-bottom:12px; padding-right:36px; line-height:1.4;
+  }
+  .modal-box .project-link{
+    display:inline-block; margin-bottom:14px;
+    font-family:var(--mono); font-size:0.82rem;
+  }
+  .modal-box p{ color:var(--text-dim); font-size:0.92rem; line-height:1.75; margin-bottom:14px; }
+  .modal-box .tags{ margin-top:16px; }
+  @media (max-width:680px){
+    .modal-box{ padding:22px 18px; }
+  }
+
+  @media (max-width:680px){
+    nav ul{ gap:16px; font-size:0.74rem; }
+    nav ul li:nth-child(n+8){ display:none; }
+    .hero{ padding:56px 0 40px; }
+    .terminal-body .name-line{ font-size:1.4rem; }
+    .terminal-body{ font-size:0.8rem; padding:18px 16px; }
+    .skills-grid, .cert-grid{ grid-template-columns:1fr; }
+    section{ padding:40px 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:0.01ms !important; animation-iteration-count:1 !important; }
+    .terminal-body .line{ opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">manahil<span>@</span>secops<span>:~$</span></div>
+    <ul>
+      <li><a href="#about">about</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#other-work">other_work</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#certs">certs</a></li>
+      <li><a href="#ctf">ctf</a></li>
+      <li><a href="#talks">talks</a></li>
+      <li><a href="#techstack">tech_stack</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="terminal-title">manahil@secops: ~/portfolio</span>
+        </div>
+        <div class="terminal-body" id="termBody">
+          <div class="line" style="animation-delay:0.1s"><span class="prompt">$</span> <span class="cmd">whoami</span></div>
+          <div class="line" style="animation-delay:0.5s name-line">Manahil Khan</div>
+          <div class="line role-line" style="animation-delay:0.7s">AI Security Researcher · Application Security Engineer · DevSecOps · CHFI Certified</div>
+          <div class="line" style="animation-delay:1.0s"><span class="prompt">$</span> <span class="cmd">cat status.log</span></div>
+          <div class="line out" style="animation-delay:1.4s">[ok] Final-year Cybersecurity student @ COMSATS University Islamabad</div>
+          <div class="line out" style="animation-delay:1.6s">[ok] TryHackMe rank: Top 6% globally</div>
+          <div class="line ok" style="animation-delay:1.8s">[done] scan complete — 0 critical issues<span class="cursor"></span></div>
+        </div>
+      </div>
+
+      <div class="hero-links">
+        <a href="mailto:khanminahil397@gmail.com">khanminahil397@gmail.com</a>
+        <a href="https://www.linkedin.com/in/manahil-khan-726782224/" target="_blank" rel="noopener">linkedin.com/in/manahil-khan</a>
+        <a href="https://github.com/manahylkhan" target="_blank" rel="noopener">github.com/manahylkhan</a>
+        <a href="https://tryhackme.com/p/manahyl." target="_blank" rel="noopener">TryHackMe <span class="badge">Top 6%</span></a>
+        <span>Rawalpindi, Pakistan</span>
+      </div>
+
+      <p class="hero-summary">
+        Final-year Cybersecurity student specializing in <strong>AI-driven vulnerability detection</strong>,
+        <strong>secure software development</strong>, and <strong>application security</strong>.
+        Hands-on experience across VAPT, DevSecOps pipelines, SOC operations, and threat intelligence —
+        with daily tools spanning Burp Suite, OWASP Top 10 / API Top 10, MITRE ATT&CK, and Python-based security automation.
+      </p>
+    </div>
+  </section>
+
+  <!-- ABOUT / SKILLS -->
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 01</span>
+        <h2>about</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="about-bio">
+        <p>
+          I'm a final-year Cybersecurity student at COMSATS University Islamabad (CGPA 3.57, graduating Sep 2026)
+          with a broad, hands-on background spanning AI security research, application security, penetration testing,
+          digital forensics, and DevSecOps. My Final Year Project — <strong>QEGVD</strong> — is a hybrid
+          quantum-classical neural network for automated vulnerability detection in C/C++ source code,
+          combining Graph Attention Networks, a 4-qubit Variational Quantum Circuit (PennyLane), and
+          a patch recommendation engine, deployed as a full-stack secure platform (SecuraQ++).
+        </p>
+        <p>
+          Outside research, I've built and broken real systems: from exploiting EternalBlue on Windows 7
+          and dual-path compromise of Kioptrix, to building a full DevSecOps pipeline with Jenkins,
+          Kubernetes, Trivy, and runtime monitoring via Falco. I hold a CHFI certification from EC-Council,
+          a Certified LLM Security Professional credential from Red Team Leaders, and 15+ additional
+          certifications across forensics, GRC, and offensive security. On TryHackMe I rank in the
+          <strong>Top 6% globally</strong>.
+        </p>
+        <p>
+          I've served as Core Member &amp; HR of Cyber Hacktivators Club, co-organizing CodeConCUI'24
+          and ComsiCon'25, competed in CTFs including PakCrypt'23 and DevCon NUST 2025, and volunteered
+          at national cybersecurity events including Cyber Secure Pakistan (PISA). I'm actively seeking
+          internships and entry-level roles in application security, AI security research, and SOC operations.
+        </p>
+      </div>
+      <div class="section-head" style="margin-top:36px">
+        <h2>core_skills</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="skills-grid">
+        <div class="skill-card">
+          <h3>AI/ML Security &amp; Analysis</h3>
+          <p>Python, Static Code Analysis, AST Parsing, Quantum ML, Scikit-learn, CVE/CWE datasets, SAST tooling.</p>
+        </div>
+        <div class="skill-card">
+          <h3>Application &amp; API Security</h3>
+          <p>OWASP Top 10, OWASP API Top 10, Burp Suite, SQLMap, Nikto, Gobuster, IDOR, XSS, SQLi, RCE, CSRF.</p>
+        </div>
+        <div class="skill-card">
+          <h3>DevSecOps &amp; Secure SDLC</h3>
+          <p>Docker, Kubernetes, Jenkins, GitHub Actions, AWS EC2, Zero Trust, threat modeling, secure code review.</p>
+        </div>
+        <div class="skill-card">
+          <h3>Penetration Testing</h3>
+          <p>Nmap, Metasploit, Hydra, WPScan, Impacket, Responder, Dirsearch, Kali Linux.</p>
+        </div>
+        <div class="skill-card">
+          <h3>SOC &amp; Threat Intelligence</h3>
+          <p>Wazuh, ELK Stack, OpenCTI, IRIS, IBM QRadar, Apache Kafka, MITRE ATT&amp;CK, IOC analysis.</p>
+        </div>
+        <div class="skill-card">
+          <h3>GRC &amp; Compliance</h3>
+          <p>ISO 27001, NIST CSF, CIS Controls, CVSS, risk assessment, gap analysis, audit documentation.</p>
+        </div>
+        <div class="skill-card">
+          <h3>Networking &amp; Forensics</h3>
+          <p>Wireshark, Scapy, tcpdump, Volatility, Autopsy, memory forensics, IDS/IPS.</p>
+        </div>
+        <div class="skill-card">
+          <h3>Languages &amp; Platforms</h3>
+          <p>Python, Bash, C++, SQL, PowerShell, JavaScript — TryHackMe, DVWA, Metasploitable 2, custom AD lab.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 02</span>
+        <h2>projects</h2>
+        <div class="rule"></div>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Final Year Project — Quantum-Enhanced Vulnerability Detection</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_0')">QEGVD — Quantum-Enhanced Neural Network for Vulnerability Detection &amp; Patching in Source Code</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Featured — DevSecOps Capstone</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_1')">SecureBank Pro — Cloud-Native Banking Platform Built with DevSecOps</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Web &amp; Application Security</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_2')">API Security Testing Lab</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_3')">CI/CD Pipeline with Monitoring — Jenkins, Docker, Kubernetes &amp; Prometheus/Grafana</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_4')">AppSec Practical Lab — Secure Development Lifecycle Walkthrough</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_5')">Vulnerability Exploitation &amp; Threat Modeling — Google Gruyere</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_6')">Secure ToDo Web App — Full Secure SDLC Remediation (Team Mid-Project)</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_7')">Threat Modeling for a Core Banking System (SSD Lab)</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_31')">Linux Weak Permissions Scanner</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_32')">Phishing Web Application Simulation</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_33')">Web Vulnerability Lab — DVWA &amp; Metasploitable 2</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Vulnerability Assessment &amp; Reverse Engineering</div>
+        <p class="group-intro">
+          A semester-long VA/RE coursework series covering the full vulnerability management
+          lifecycle — reconnaissance, scanning, mobile app analysis, and binary reverse engineering.
+        </p>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_8')">Vulnerability Research, OSINT &amp; Reconnaissance</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_9')">Web &amp; Network Vulnerability Scanning</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_10')">Mobile Application Security Analysis</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_11')">Binary &amp; Assembly-Level Reverse Engineering</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Digital Forensics</div>
+        <p class="group-intro">
+          A semester-long DFIR coursework series covering forensic investigation across disk, memory,
+          mobile, and network layers, plus a dedicated incident-response case study using an EDR-style
+          threat-hunting platform.
+        </p>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_12')">System File Analyzer — Bash CLI Forensic Toolkit</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_13')">Practical Windows Forensics — Full Incident Investigation (Midterm DF Project)</button>
+
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_14')">Disk Forensics — Image &amp; File System Analysis</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_15')">Memory Forensics — Live System &amp; Credential Manager Analysis</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_16')">Network Forensics — Traffic Analysis &amp; Email Investigation</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_17')">Mobile Forensics — Android &amp; iOS Acquisition and Analysis</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_18')">Threat Hunting &amp; Incident Response with Velociraptor</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Network Security</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_19')">Network Scanner &amp; IDS — Real-Time Attack Detection Tool</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Penetration Testing</div>
+        <p class="group-intro">
+          Hands-on exploitation and privilege escalation work in a personal VM lab, covering Windows
+          and Linux targets across vulnerable machine compromises and mobile application analysis.
+        </p>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_20')">Windows 7 — EternalBlue (MS17-010) Exploitation &amp; Post-Exploitation</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_21')">Kioptrix (VulnHub) — Full Box Compromise via Dual Exploitation Paths</button>
+
+        <button class="proj-link-item" onclick="openProjectModal('proj_22')">Mobile Application Security — Static &amp; Dynamic Analysis</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">SOC / Infrastructure &amp; Blue Team</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_23')">Threat Intelligence &amp; SIEM/SOAR Monitoring Platform</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_24')">Real-Time SOC Analytics Pipeline</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_41')">Real-Time Security Analytics Pipeline — Kafka, SIEM &amp; ML</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_25')">Active Directory Attack &amp; Defense Lab</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_26')">Infiltrator's Eye — Endpoint Forensic Monitoring Framework</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_28')">CTI-SIEM Integration — OpenCTI + Wazuh (National CERT Pakistan)</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_29')">Insider Threat Detection via Behavior Analysis</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_30')">Malware Detection Model — ML-Based Log Analysis</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- OTHER TECHNICAL WORK -->
+  <section id="other-work">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 2a</span>
+        <h2>other_technical_work</h2>
+        <div class="rule"></div>
+      </div>
+      <p class="group-intro">
+        Hands-on coursework outside the core security curriculum that builds foundational networking
+        knowledge underpinning security work.
+      </p>
+
+      <div class="project-group">
+        <div class="group-label">AI &amp; Computer Vision</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_36')">FaceBlueIn — Real-Time Face Recognition &amp; Attendance System</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_37')">FaceBlurInRealTime — GDPR-Compliant Facial Anonymization</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Systems &amp; Parallel Computing</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_34')">IDS via Socket Programming</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_35')">DDoS Detection with OpenMP — Parallel Traffic Analysis</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Networking &amp; Coursework</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_27')">Computer Networks — Full Lab Coursework</button>
+      </div>
+
+      <div class="project-group">
+        <div class="group-label">Early Projects</div>
+        <button class="proj-link-item" onclick="openProjectModal('proj_38')">E-Shopping Hub — Java Desktop E-Commerce App</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_39')">Unbeatable TicTacToe — Minimax AI</button>
+        <button class="proj-link-item" onclick="openProjectModal('proj_40')">ToDoListCpp — Stack-Based Task Manager</button>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="experience">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 03</span>
+        <h2>experience</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="timeline">
+        <div class="exp-item">
+          <div class="exp-head">
+            <h3>ZK Nexus — Remote</h3>
+            <span class="dates">May 2025 – Aug 2025</span>
+          </div>
+          <div class="exp-role">Cybersecurity Intern — Penetration Testing</div>
+          <ul>
+            <li>Conducted VAPT on 5+ web applications, identifying 15+ critical/high vulnerabilities (SQLi, XSS, auth flaws) aligned with OWASP Top 10; delivered CVSS-scored technical reports with remediation guidance.</li>
+            <li>Performed API security assessments using Burp Suite targeting broken authentication, excessive data exposure, and injection flaws; validated findings via manual exploitation and automated tooling.</li>
+          </ul>
+        </div>
+        <div class="exp-item">
+          <div class="exp-head">
+            <h3>National CERT — Pakistan (National Cybersecurity Authority)</h3>
+            <span class="dates">Jul 2025 – Aug 2025</span>
+          </div>
+          <div class="exp-role">Threat Intelligence Intern · Islamabad, Pakistan</div>
+          <ul>
+            <li>Monitored 50+ daily security alerts using Wazuh, ELK Stack, OpenCTI, and IRIS; performed IOC identification, log correlation, and alert triage — reducing false-positive investigation time by ~20%.</li>
+            <li>Produced structured threat intelligence reports mapping attack campaigns to MITRE ATT&amp;CK techniques; assisted senior analysts during live incident escalations.</li>
+          </ul>
+        </div>
+        <div class="exp-item">
+          <div class="exp-head">
+            <h3>InoTech Solutions Pvt. Ltd. — Rawalpindi, Pakistan</h3>
+            <span class="dates">Jul 2024 – Sep 2024</span>
+          </div>
+          <div class="exp-role">Junior GRC Analyst &amp; Security Automation Developer</div>
+          <ul>
+            <li>Conducted IT risk and vulnerability assessments aligned with ISO 27001 and NIST CSF; developed Python scripts to automate vulnerability scanning, log parsing, and compliance reporting workflows.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTS & CTF -->
+  <section id="certs">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 04</span>
+        <h2>certifications</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="cert-grid">
+        <button class="cert-btn" onclick="openCertModal('cert_0')">Certified LLM Security Professional</button>
+        <button class="cert-btn" onclick="openCertModal('cert_1')">Computer Hacking Forensic Investigator (CHFI)</button>
+        <button class="cert-btn" onclick="openCertModal('cert_2')">Certified Threat Intelligence &amp; Governance Analyst (CTIGA)</button>
+        <button class="cert-btn" onclick="openCertModal('cert_3')">Certified Ransomware Protection Officer (CRPO)</button>
+        <button class="cert-btn" onclick="openCertModal('cert_4')">Certified SME Cybersecurity Officer (CSCSO)</button>
+        <button class="cert-btn" onclick="openCertModal('cert_5')">Digital Forensics &amp; Incident Response (DFIR)</button>
+        <button class="cert-btn" onclick="openCertModal('cert_6')">Reverse Engineering &amp; Malware Analysis</button>
+        <button class="cert-btn" onclick="openCertModal('cert_7')">Computer Forensics &amp; Digital Forensics</button>
+        <button class="cert-btn" onclick="openCertModal('cert_8')">WordPress Security</button>
+        <button class="cert-btn" onclick="openCertModal('cert_9')">Certified Phishing Prevention Specialist (CPPS)</button>
+        <button class="cert-btn" onclick="openCertModal('cert_10')">Information Security Associate</button>
+        <button class="cert-btn" onclick="openCertModal('cert_11')">ISO/IEC 20000 IT Service Management Associate</button>
+        <button class="cert-btn" onclick="openCertModal('cert_12')">Digital Forensics &amp; Ethical Hacking</button>
+        <button class="cert-btn" onclick="openCertModal('cert_13')">Introduction to Cybersecurity — Cisco</button>
+        <button class="cert-btn" onclick="openCertModal('cert_14')">Digital Forensics — Security Blue Team</button>
+        <button class="cert-btn" onclick="openCertModal('cert_15')">Network Analysis — Security Blue Team</button>
+        <button class="cert-btn" onclick="openCertModal('cert_16')">OSINT — Security Blue Team</button>
+        <button class="cert-btn" onclick="openCertModal('cert_17')">Steganography — Security Blue Team</button>
+        <button class="cert-btn" onclick="openCertModal('cert_18')">Introduction to Programming Using Python</button>
+      </div>
+
+      <div style="height:32px"></div>
+
+      <div class="group-label" id="ctf">CTF &amp; Competitions</div>
+      <div class="cert-grid">
+        <div class="cert-item">
+          <span class="cert-name">Reversing CTF</span>
+          <span class="cert-meta">Cyber Hacktivators Club · March 2024</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">PakCrypt'23</span>
+          <span class="cert-meta">National Center for Cyber Security, Pakistan · Dec 2023</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">Capture the Flag Event</span>
+          <span class="cert-meta">National Center for Cyber Security, Pakistan · Dec 2023</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">DevCon NUST Hackathon 2025 CTF</span>
+          <span class="cert-meta">Signalianz Security Hub · Feb 2025</span>
+        </div>
+      </div>
+
+      <div style="height:24px"></div>
+
+      <div class="group-label">Club Leadership &amp; Events</div>
+      <div class="cert-grid">
+        <div class="cert-item">
+          <span class="cert-name">Core Member &amp; HR — Cyber Hacktivators Club</span>
+          <span class="cert-meta">CodeConCUI'24 · Oct 2024 — Co-organized and managed a university-level competitive programming and cybersecurity event</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">Core Member &amp; HR — Cyber Hacktivators Club</span>
+          <span class="cert-meta">ComsiCon'25 · Apr 2025</span>
+        </div>
+      </div>
+
+      <div style="height:24px"></div>
+
+      <div class="group-label" id="talks">Bootcamps, Talks &amp; Volunteering</div>
+      <div class="cert-grid">
+        <div class="cert-item">
+          <span class="cert-name">Vulnerability Assessment Bootcamp</span>
+          <span class="cert-meta">Tech Hierarchy · Feb 2025</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">Here's What's Not New: The Top Class of Vulnerability</span>
+          <span class="cert-meta">Women in CyberSecurity (WiCyS) · July 2024</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">Student Volunteer — Cyber Secure Pakistan (CSP)</span>
+          <span class="cert-meta">Pakistan Information Security Association (PISA) · Dec 2023 — Interviewed industry guests on cybersecurity trends, demands, and the future of the field at a national cybersecurity event in Islamabad; networked with security professionals and gained hands-on knowledge of industry requirements.</span>
+        </div>
+        <div class="cert-item">
+          <span class="cert-name">Student Volunteer</span>
+          <span class="cert-meta">Volunteer Force Pakistan · Oct 2019</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- TECH STACK -->
+  <section id="techstack">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 06</span>
+        <h2>tech_stack</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="tech-stack">
+        <div class="tech-category">
+          <h4>Languages</h4>
+          <div class="tech-pills">
+            <span class="tech-pill">Python</span><span class="tech-pill">C++</span><span class="tech-pill">Java</span><span class="tech-pill">Bash</span><span class="tech-pill">JavaScript</span><span class="tech-pill">HTML5</span><span class="tech-pill">CSS3</span><span class="tech-pill">SQL</span><span class="tech-pill">PowerShell</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4>Offensive Security</h4>
+          <div class="tech-pills">
+            <span class="tech-pill">Burp Suite</span><span class="tech-pill">Nmap</span><span class="tech-pill">Metasploit</span><span class="tech-pill">Nessus</span><span class="tech-pill">SQLMap</span><span class="tech-pill">Responder</span><span class="tech-pill">Impacket</span><span class="tech-pill">Mimikatz</span><span class="tech-pill">GoPhish</span><span class="tech-pill">Nikto</span><span class="tech-pill">Gobuster</span><span class="tech-pill">Searchsploit</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4>Blue Team / SIEM / CTI</h4>
+          <div class="tech-pills">
+            <span class="tech-pill">Wazuh</span><span class="tech-pill">OpenCTI</span><span class="tech-pill">ELK Stack</span><span class="tech-pill">IBM QRadar</span><span class="tech-pill">Apache Kafka</span><span class="tech-pill">Wireshark</span><span class="tech-pill">IRIS DFIR</span><span class="tech-pill">Velociraptor</span><span class="tech-pill">Volatility</span><span class="tech-pill">Autopsy</span><span class="tech-pill">KAPE</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4>DevSecOps &amp; Cloud</h4>
+          <div class="tech-pills">
+            <span class="tech-pill">Docker</span><span class="tech-pill">Kubernetes</span><span class="tech-pill">AWS EC2</span><span class="tech-pill">Jenkins</span><span class="tech-pill">Prometheus</span><span class="tech-pill">Grafana</span><span class="tech-pill">Terraform</span><span class="tech-pill">Vault</span><span class="tech-pill">Falco</span><span class="tech-pill">Trivy</span><span class="tech-pill">SonarQube</span><span class="tech-pill">GitHub Actions</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4>AI / ML / Computer Vision</h4>
+          <div class="tech-pills">
+            <span class="tech-pill">PyTorch</span><span class="tech-pill">PennyLane (VQC)</span><span class="tech-pill">scikit-learn</span><span class="tech-pill">OpenCV</span><span class="tech-pill">FaceNet</span><span class="tech-pill">Dlib</span><span class="tech-pill">SHAP</span><span class="tech-pill">Isolation Forest</span>
+          </div>
+        </div>
+        <div class="tech-category">
+          <h4>OS &amp; Other</h4>
+          <div class="tech-pills">
+            <span class="tech-pill">Kali Linux</span><span class="tech-pill">Ubuntu</span><span class="tech-pill">Windows Server</span><span class="tech-pill">Postman</span><span class="tech-pill">MySQL</span><span class="tech-pill">IDA Pro</span><span class="tech-pill">Ghidra</span><span class="tech-pill">MobSF</span><span class="tech-pill">Frida</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="tag">// 05</span>
+        <h2>contact</h2>
+        <div class="rule"></div>
+      </div>
+      <div class="contact-box">
+        <p>Open to internships and entry-level roles in application security, AI security research, and SOC operations.</p>
+        <div class="contact-actions">
+          <a class="btn primary" href="mailto:khanminahil397@gmail.com">Email me</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/manahil-khan-726782224/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn ghost" href="https://github.com/manahylkhan" target="_blank" rel="noopener">GitHub</a>
+          <a class="btn ghost" href="https://tryhackme.com/p/manahyl." target="_blank" rel="noopener">TryHackMe</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">&copy; 2026 Manahil Khan — built with care, secured by default.</div>
+</footer>
+
+
+<!-- PROJECT MODAL -->
+<div class="modal-overlay" id="projectModalOverlay" onclick="closeProjectModalOnOverlay(event)">
+  <div class="modal-box" id="projectModalBox" role="dialog" aria-modal="true">
+    <button class="modal-close" onclick="closeProjectModal()" aria-label="Close">✕</button>
+    <h3 id="modalTitle"></h3>
+    <div id="modalGithub"></div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+const PROJECT_DATA = {"proj_0": {"id": "proj_0", "title": "QEGVD — Quantum-Enhanced Neural Network for Vulnerability Detection &amp; Patching in Source Code", "github": null, "body": "<p class=\"subtitle\">\n            A hybrid quantum-classical AI system that detects Buffer Overflow, Format String, and\n            Use-After-Free vulnerabilities in C/C++ source code and auto-generates CWE-mapped patches —\n            built end to end as a secure, full-stack web platform (SecuraQ++).\n          </p>\n          <p>\n            QEGVD addresses the core weaknesses of traditional static analyzers (high false-positive\n            rates, brittle rule-based scanning) and classical ML detectors (large labeled-data\n            requirements, weak generalization) by combining multi-view program graph analysis, graph\n            attention networks, and a variational quantum circuit into a single nine-stage pipeline.\n            Each function is parsed into seven program graph representations — Abstract Syntax Tree,\n            Control Flow Graph, Data Flow Graph, Program Dependence Graph, Taint Propagation Graph,\n            Memory Access Graph, and Call Graph (plus a Format String Graph for FS detection) — using\n            tree-sitter. A shared-weight multi-view Graph Attention Network (4 layers, 8 attention heads)\n            encodes these into a 128-dimensional embedding, which a classical encoder compresses to 32\n            dimensions. A Quantum-Aware Feature Alignment (QAFA) module then selects the 16 most\n            informative features via a composite Mutual Information + SHAP + graph-centrality score,\n            rescales them to rotation angles, and feeds them into a 4-qubit Variational Quantum Circuit\n            (PennyLane) using data re-uploading and entanglement layers. The 4-dimensional quantum\n            output is fused with the 32-dimensional classical vector into a 36-dimensional hybrid\n            representation for final classification, with predictions cross-validated against static\n            analysis to suppress false positives.\n          </p>\n\n          <div class=\"featured-grid\">\n            <div class=\"featured-block\">\n              <h4>Data &amp; Preprocessing</h4>\n              <ul>\n                <li>Trained on Juliet Test Suite, Devign, and Big-Vul/MSR — 17,698 functions after cleaning</li>\n                <li>Eliminated Juliet's label-leakage problem: function names, identifiers, comments, and synthetic control flow neutralized</li>\n                <li>15-point leakage audit with zero violations across all three datasets</li>\n                <li>MD5-based two-pass deduplication and stratified 70/15/15 train/val/test splits</li>\n              </ul>\n            </div>\n            <div class=\"featured-block\">\n              <h4>Hybrid Quantum-Classical Pipeline</h4>\n              <ul>\n                <li>7 program graphs per function via tree-sitter, fused by a multi-view GAT into a 128-d embedding</li>\n                <li>QAFA feature selection (MI + SHAP + centrality) narrows to the 16 most relevant features</li>\n                <li>4-qubit Variational Quantum Circuit with data re-uploading, ring entanglement, and parameter-shift gradients</li>\n                <li>Residual fusion of 32-d classical + 4-d quantum vectors into a 36-d hybrid representation</li>\n              </ul>\n            </div>\n            <div class=\"featured-block\">\n              <h4>Explainability &amp; Patch Engine</h4>\n              <ul>\n                <li>SHAP KernelExplainer for per-prediction feature attribution</li>\n                <li>GNNExplainer identifies the exact graph nodes/code lines driving each prediction</li>\n                <li>Automated line-level patch engine: strcpy→strncpy, gets→fgets, printf format-string fixes, free+NULL guards</li>\n                <li>Patch validation pipeline re-scans patched code and reports improvement percentage</li>\n              </ul>\n            </div>\n            <div class=\"featured-block\">\n              <h4>Full-Stack Secure Platform (SecuraQ++)</h4>\n              <ul>\n                <li>React + Vite frontend, FastAPI scanning backend, Node/Express auth backend, SQLite</li>\n                <li>Mandatory 2FA (email OTP + TOTP), JWT auth, bcrypt hashing, RBAC, audit logging</li>\n                <li>Real-time WebSocket scan progress, dashboards, and downloadable PDF/JSON reports</li>\n                <li>33 unit tests, 20 functional tests, and 9 integration tests across the full pipeline</li>\n              </ul>\n            </div>\n          </div>\n\n          <table class=\"risk-table\">\n            <tr><th>Vulnerability Class</th><th>F1 Score</th><th>ROC-AUC</th><th>Accuracy</th></tr>\n            <tr><td>Buffer Overflow (CWE-121/122)</td><td>0.912</td><td>0.972</td><td>90.5%</td></tr>\n            <tr><td>Use-After-Free (CWE-416)</td><td>0.891</td><td>0.938</td><td>88.8%</td></tr>\n            <tr><td>Format String (CWE-134)</td><td>0.812</td><td>0.840</td><td>82.0%</td></tr>\n          </table>\n\n          <div class=\"tags\">\n            <span>PyTorch</span><span>PyTorch Geometric</span><span>PennyLane (VQC)</span><span>Graph Attention Networks</span><span>tree-sitter</span><span>SHAP / GNNExplainer</span><span>FastAPI</span><span>React</span><span>Node.js / Express</span><span>JWT + 2FA</span><span>Juliet Test Suite</span>\n          </div>"}, "proj_1": {"id": "proj_1", "title": "SecureBank Pro — Cloud-Native Banking Platform Built with DevSecOps", "github": "https://github.com/manahylkhan/BankingApplication", "body": "<p class=\"subtitle\">\n            A complete secure software development lifecycle: from threat modeling and secure\n            architecture to a hardened CI/CD pipeline with automated security testing, container\n            security, cloud deployment, and runtime monitoring.\n          </p>\n          <div class=\"links\">\n</div>\n          <p>\n            SecureBank Pro is a cloud-native, microservice-based banking platform — covering\n            authentication, account management, fund transfers, transaction history, and bill\n            payments — designed end-to-end around Zero Trust and DevSecOps principles. The\n            project was carried out in distinct phases, mirroring how a real security engineering\n            team would build and ship a sensitive financial system.\n          </p>\n\n          <div class=\"featured-grid\">\n            <div class=\"featured-block\">\n              <h4>Threat Modeling &amp; Risk Assessment</h4>\n              <ul>\n                <li>Defined 15+ security requirements mapped to OWASP ASVS v5.0 (authentication, session management, access control, cryptography, API security)</li>\n                <li>Performed full STRIDE threat analysis across spoofing, tampering, repudiation, information disclosure, DoS, and privilege escalation</li>\n                <li>Scored top threats with DREAD (SQL injection rated 8.8/Critical, account takeover 8.0/High)</li>\n                <li>Defined 4 trust boundaries (External/DMZ, internal services, data layer, privileged admin access)</li>\n                <li>Built a risk matrix mapping each threat to specific mitigating controls</li>\n              </ul>\n            </div>\n            <div class=\"featured-block\">\n              <h4>Secure Architecture Design</h4>\n              <ul>\n                <li>Designed a microservice architecture: Authentication, Account, Transfer, and Transaction services</li>\n                <li>Applied Zero Trust principles — explicit verification, least-privilege access, assume-breach design</li>\n                <li>Defined IAM roles &amp; permissions, mapped controls to the NIST Cybersecurity Framework</li>\n                <li>Produced C4 context and container diagrams plus Data Flow Diagrams (Level 1)</li>\n              </ul>\n            </div>\n            <div class=\"featured-block\">\n              <h4>Secure Implementation &amp; Testing</h4>\n              <ul>\n                <li>JWT/OAuth2-based API authentication with short-lived tokens and rate limiting</li>\n                <li>Server-side input validation, parameterized queries, AES-256 encryption at rest, TLS 1.3 in transit</li>\n                <li>Tamper-evident secure logging with no sensitive data in error output</li>\n                <li>SAST with SonarQube and GitHub CodeQL; DAST with OWASP ZAP against the running application</li>\n              </ul>\n            </div>\n            <div class=\"featured-block\">\n              <h4>CI/CD, Cloud &amp; Runtime Security</h4>\n              <ul>\n                <li>Containerized with Docker, pushed to DockerHub, deployed via Kubernetes on AWS EC2</li>\n                <li>Jenkins pipeline automating checkout, build, security scanning, and deployment</li>\n                <li>Trivy container image scanning integrated into the pipeline alongside SonarQube and ZAP</li>\n                <li>Infrastructure as Code with Terraform; secrets managed via Vault; least-privilege IAM</li>\n                <li>Prometheus + Grafana for monitoring, Falco for runtime threat detection, with simulated SOC alerting</li>\n              </ul>\n            </div>\n          </div>\n\n          <table class=\"risk-table\">\n            <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr>\n            <tr><td>Account takeover (credential theft)</td><td>High</td><td class=\"crit\">Critical</td><td>MFA, account lockout with backoff</td></tr>\n            <tr><td>SQL injection</td><td>Medium</td><td class=\"crit\">Critical</td><td>Input validation, parameterized queries</td></tr>\n            <tr><td>Session hijacking</td><td>Medium</td><td>High</td><td>Strong session tokens, short timeouts</td></tr>\n            <tr><td>MITM on transactions</td><td>Medium</td><td class=\"crit\">Critical</td><td>TLS 1.3, certificate pinning</td></tr>\n            <tr><td>Unauthorized large transfers</td><td>Medium</td><td>High</td><td>Transaction limits, approval workflow</td></tr>\n          </table>\n\n          <div class=\"tags\">\n            <span>Zero Trust</span><span>STRIDE / DREAD</span><span>OWASP ASVS</span><span>Microservices</span><span>JWT / OAuth2</span><span>SonarQube</span><span>CodeQL</span><span>OWASP ZAP</span><span>Trivy</span><span>Docker</span><span>Kubernetes</span><span>Jenkins</span><span>Terraform</span><span>Vault</span><span>Prometheus</span><span>Grafana</span><span>Falco</span><span>AWS EC2</span>\n          </div>"}, "proj_2": {"id": "proj_2", "title": "API Security Testing Lab", "github": "https://github.com/manahylkhan/APITesting", "body": "<p>\n            Comprehensive hands-on lab covering the OWASP API Security Top 10 (2023) against a custom\n            vulnerable API, progressing from beginner to advanced tasks: information gathering and\n            endpoint discovery, Broken Object Level Authorization (BOLA), and SQL injection (exploited\n            with custom Python scripts and sqlmap) at the beginner level; Mass Assignment, Security\n            Misconfiguration, and Broken Authentication at the intermediate level; and Server-Side\n            Request Forgery (SSRF), API rate-limiting bypass, and custom exploit development at the\n            advanced level. Used OWASP ZAP for automated spidering and scanning, and produced a\n            vulnerability report with severity ratings and remediation guidance for each finding.\n          </p>\n          <div class=\"tags\">\n            <span>Burp Suite</span><span>OWASP API Top 10</span><span>Python</span><span>OWASP ZAP</span><span>sqlmap</span><span>BOLA</span><span>SSRF</span><span>Exploit Development</span>\n          </div>"}, "proj_3": {"id": "proj_3", "title": "CI/CD Pipeline with Monitoring — Jenkins, Docker, Kubernetes &amp; Prometheus/Grafana", "github": "https://github.com/manahylkhan/simple-webapp", "body": "<p>\n            Built a complete CI/CD pipeline for a Flask + MySQL web application, deployed end-to-end on\n            AWS EC2. Set up Jenkins on Ubuntu with GitHub webhook integration for automated triggers,\n            wrote a Jenkins pipeline (Code Fetch → Docker Build → Docker Push → Kubernetes Deploy →\n            Monitoring) using declarative Groovy syntax, containerized the application with Docker and\n            pushed images to DockerHub, and deployed to a Kubernetes cluster (Minikube) with separate\n            deployment, service, PVC, and MySQL manifests for persistent storage. Integrated a\n            Prometheus + Grafana monitoring stack via Helm to track pod status, CPU/memory usage, and\n            cluster health with live dashboards and PromQL queries.\n          </p>\n          <div class=\"tags\">\n            <span>Jenkins</span><span>Docker</span><span>Kubernetes</span><span>Helm</span><span>Prometheus</span><span>Grafana</span><span>AWS EC2</span><span>CI/CD</span>\n          </div>"}, "proj_4": {"id": "proj_4", "title": "AppSec Practical Lab — Secure Development Lifecycle Walkthrough", "github": null, "body": "<p>\n            Worked through a full application security lifecycle on a deliberately vulnerable e-commerce\n            platform, acting as a security engineer tasked with securing the application end to end.\n            Set up the vulnerable app in a Dockerized environment, performed threat modeling to identify\n            risks against the application's architecture, conducted secure code review to find common\n            vulnerability patterns in source code, ran security testing with industry tools to validate\n            findings, and proposed security controls and monitoring to mitigate identified risks and\n            assess the application's overall security maturity.\n          </p>\n          <div class=\"tags\">\n            <span>Docker</span><span>Threat Modeling</span><span>Secure Code Review</span><span>Security Testing</span><span>SDLC</span>\n          </div>"}, "proj_5": {"id": "proj_5", "title": "Vulnerability Exploitation &amp; Threat Modeling — Google Gruyere", "github": null, "body": "<p>\n            Performed hands-on exploitation of OWASP Top 10-style vulnerabilities on Google's\n            intentionally-vulnerable Gruyere web application, then built a corresponding threat model\n            using the Microsoft Threat Modeling Tool and IriusRisk. Exploits included stored XSS via\n            malicious file uploads, reflected XSS using event-handler injection, privilege escalation\n            via parameter manipulation (forcing <code>is_admin=True</code> on profile updates), XSRF\n            attacks tricking users into unintended actions via crafted URLs, XSSI exploitation to leak\n            private JSON data through script-tag inclusion, configuration vulnerabilities exposing\n            sensitive database information via unprotected endpoints, and cookie manipulation attacks\n            exploiting weak role-parsing logic for privilege escalation. Documented each exploit with a\n            data flow diagram, generated technical threat and countermeasure reports, and assessed\n            residual risk after proposed mitigations.\n          </p>\n          <div class=\"tags\">\n            <span>Google Gruyere</span><span>XSS</span><span>XSRF</span><span>XSSI</span><span>Privilege Escalation</span><span>IriusRisk</span><span>Threat Modeling</span>\n          </div>"}, "proj_6": {"id": "proj_6", "title": "Secure ToDo Web App — Full Secure SDLC Remediation (Team Mid-Project)", "github": null, "body": "<p>\n            Led a multi-phase secure software development project on a forked Node.js/Express ToDo\n            application (Passport.js authentication, SQLite, EJS), simulating a full security engineering\n            sprint. In the planning phase, defined security objectives around the CIA triad and mapped\n            system assets, users, and data flows. In the threat modeling phase, built Data Flow Diagrams,\n            applied STRIDE across authentication, session, and database components, and developed a\n            detailed attack tree for a stored XSS attack chain — from malicious payload injection through\n            session/cookie exfiltration to account takeover — scoring it at CVSS v3.1 base score 8.0 (High)\n            with a fully justified vector. In the implementation phase, applied five security patches:\n            input validation and sanitization in the authentication layer, secure session cookie\n            configuration (HttpOnly, Secure, SameSite) to address spoofing and session fixation, security\n            headers (CSP, XSS protection, HSTS), password hashing, and session regeneration after login\n            plus generic error handling to prevent stack trace leakage. In the testing phase, ran automated\n            security scans including SAST with GitHub CodeQL, Software Composition Analysis (SCA) for\n            dependency vulnerabilities, and DAST with OWASP ZAP — documenting before/after results\n            across all phases in a full project report with recorded demos.\n          </p>\n          <div class=\"tags\">\n            <span>Secure SDLC</span><span>STRIDE</span><span>CVSS v3.1</span><span>Stored XSS</span><span>CodeQL (SAST)</span><span>OWASP ZAP (DAST)</span><span>SCA</span><span>Node.js / Express</span>\n          </div>"}, "proj_7": {"id": "proj_7", "title": "Threat Modeling for a Core Banking System (SSD Lab)", "github": null, "body": "<p>\n            Performed structured threat modeling for a core banking system using the Microsoft Threat\n            Modeling Tool, building Data Flow Diagrams to map system components, data flows, and trust\n            boundaries across channels (branches, ATMs, internet banking) and backend core systems.\n            Applied the STRIDE methodology to systematically identify threats — spoofing, tampering,\n            repudiation, information disclosure, denial of service, and elevation of privilege — across\n            input, processing, storage, and output stages. Analyzed and prioritized risks by impact and\n            likelihood, then proposed technical and procedural mitigations (input validation, encryption,\n            WAF deployment, RBAC, audit logging) aligned with Secure SDLC and \"shift-left\" security\n            principles.\n          </p>\n          <div class=\"tags\">\n            <span>Threat Modeling</span><span>STRIDE</span><span>Microsoft Threat Modeling Tool</span><span>DFD</span><span>Secure SDLC</span><span>Risk Prioritization</span>\n          </div>"}, "proj_8": {"id": "proj_8", "title": "Vulnerability Research, OSINT &amp; Reconnaissance", "github": null, "body": "<p>\n            Practiced core vulnerability management concepts including vulnerability research and\n            exploitation workflows, and CVE database analysis for tracking and prioritizing known\n            vulnerabilities. Performed network and domain reconnaissance using Ping and Traceroute for\n            network path analysis, AnyWho for people/organization lookups, and Nslookup, Spokeo, and\n            SmartWhois for DNS and domain ownership analysis. Used Google Dorking techniques for\n            advanced search-based enumeration of exposed assets and information.\n          </p>\n          <div class=\"tags\">\n            <span>CVE Analysis</span><span>OSINT</span><span>Nslookup</span><span>Google Dorking</span><span>DNS Recon</span>\n          </div>"}, "proj_9": {"id": "proj_9", "title": "Web &amp; Network Vulnerability Scanning", "github": null, "body": "<p>\n            Conducted web application vulnerability assessments using Qualys, Acunetix, and Nikto to\n            identify misconfigurations, outdated software, and common web vulnerabilities. Performed\n            network-level vulnerability discovery using Nmap for host/service enumeration, alongside\n            Nessus and OpenVAS scanners to identify and prioritize network vulnerabilities by severity\n            for remediation planning.\n          </p>\n          <div class=\"tags\">\n            <span>Nmap</span><span>Nessus</span><span>OpenVAS</span><span>Nikto</span><span>Acunetix</span><span>Qualys</span>\n          </div>"}, "proj_10": {"id": "proj_10", "title": "Mobile Application Security Analysis", "github": null, "body": "<p>\n            Analyzed Android application packages using MobSF for automated static and dynamic\n            security analysis, QARK for identifying common Android app vulnerabilities, and Frida and\n            Objection for runtime instrumentation — bypassing root/jailbreak detection and SSL pinning\n            to inspect app behavior and uncover insecure data handling.\n          </p>\n          <div class=\"tags\">\n            <span>MobSF</span><span>QARK</span><span>Frida</span><span>Objection</span><span>Mobile AppSec</span>\n          </div>"}, "proj_11": {"id": "proj_11", "title": "Binary &amp; Assembly-Level Reverse Engineering", "github": null, "body": "<p>\n            Studied assembly language fundamentals and applied them to reverse engineer compiled\n            binaries. Used IDA Pro for static and dynamic disassembly and Ghidra for advanced binary\n            analysis and decompilation, alongside FakeNet-NG to simulate network services for malware\n            analysis and GDB for runtime debugging — building a foundation for analyzing malicious code\n            and bypassing software protections.\n          </p>\n          <div class=\"tags\">\n            <span>IDA Pro</span><span>Ghidra</span><span>GDB</span><span>FakeNet-NG</span><span>Assembly</span><span>Malware Analysis</span>\n          </div>"}, "proj_12": {"id": "proj_12", "title": "System File Analyzer — Bash CLI Forensic Toolkit", "github": "https://github.com/manahylkhan/systemFileAnalyzer", "body": "<p>\n            Built a command-line file analysis tool in Bash for Operating Systems coursework, designed\n            around system administration and forensic-style file inspection. Features include file metadata\n            extraction (timestamps, permissions, file type via <code>stat</code> and <code>file</code>),\n            text content analysis (word/character counts), disk usage reporting at system and file level,\n            security analysis with MD5 hashing for integrity verification, compression-type detection,\n            content-based duplicate file detection via hash comparison, and resource monitoring (CPU,\n            memory, and per-file process tracking via <code>lsof</code>). All results are logged to a\n            timestamped report file for later review. Developed collaboratively as a two-person project.\n          </p>\n          <div class=\"tags\">\n            <span>Bash</span><span>Linux CLI</span><span>MD5 Hashing</span><span>File Metadata</span><span>Duplicate Detection</span><span>Resource Monitoring</span>\n          </div>"}, "proj_13": {"id": "proj_13", "title": "Practical Windows Forensics — Full Incident Investigation (Midterm DF Project)", "github": null, "body": "<p>\n            End-to-end Windows 10 forensic investigation: simulated a realistic compromise using an\n            Atomic Red Team-based attack script covering initial access, persistence, privilege escalation,\n            and defense evasion techniques mapped to MITRE ATT&amp;CK, then acquired memory and disk\n            images on a dedicated forensic workstation. Investigated execution and persistence artifacts —\n            BAM, Shimcache, Amcache, Prefetch, Shellbags, Run keys, scheduled tasks, and Windows services —\n            alongside NTFS analysis (MFT entries, MACB timestamps, timestomping detection) and Windows\n            Event Log correlation (Security, Sysmon, PowerShell). Performed memory analysis with Volatility\n            to identify suspicious processes and injected DLLs, and built a super timeline in Eric Zimmerman's\n            Timeline Explorer to reconstruct the full attack chain.\n          </p>\n          <div class=\"tags\">\n            <span>Volatility</span><span>KAPE</span><span>Eric Zimmerman Tools</span><span>FTK Imager</span><span>Sysmon</span><span>MITRE ATT&amp;CK</span><span>NTFS Analysis</span><span>Timeline Analysis</span>\n          </div>"}, "proj_14": {"id": "proj_14", "title": "Disk Forensics — Image &amp; File System Analysis", "github": null, "body": "<p>\n            Examined forensic disk images end-to-end using Autopsy, including a guided \"Rhino Hunt\" case\n            study to recover deleted files, carve artifacts, and trace user activity. Analyzed a Windows disk\n            image to extract registry hives, recover the registry via offline capture, and correlate file system\n            metadata with user and application activity to build an evidence-backed case timeline.\n          </p>\n          <div class=\"tags\">\n            <span>Autopsy</span><span>Registry Analysis</span><span>File Carving</span><span>Windows Disk Images</span>\n          </div>"}, "proj_15": {"id": "proj_15", "title": "Memory Forensics — Live System &amp; Credential Manager Analysis", "github": null, "body": "<p>\n            Performed memory analysis on captured RAM images using Autopsy to recover running processes,\n            network connections, and in-memory artifacts. Investigated credential manager applications\n            (LastPass and Keeper) in memory to assess how sensitive data — master passwords, vault\n            contents, and session tokens — persists in volatile memory even after application use.\n          </p>\n          <div class=\"tags\">\n            <span>Autopsy</span><span>Memory Analysis</span><span>Credential Forensics</span><span>RAM Capture</span>\n          </div>"}, "proj_16": {"id": "proj_16", "title": "Network Forensics — Traffic Analysis &amp; Email Investigation", "github": null, "body": "<p>\n            Conducted packet-level network forensics with Wireshark, including a \"Rhino Hunt\" case\n            reconstructing an attacker's actions from captured traffic — extracting transferred files,\n            credentials, and command sequences from raw packet captures. Additionally performed email\n            forensics, analyzing headers, attachments, and message metadata to trace message origin and\n            identify indicators of phishing or spoofing.\n          </p>\n          <div class=\"tags\">\n            <span>Wireshark</span><span>PCAP Analysis</span><span>Email Forensics</span><span>Traffic Reconstruction</span>\n          </div>"}, "proj_17": {"id": "proj_17", "title": "Mobile Forensics — Android &amp; iOS Acquisition and Analysis", "github": null, "body": "<p>\n            Set up and rooted an Android Studio emulator to enable forensic acquisition of app data,\n            messages, and system artifacts, then analyzed the extracted image in Autopsy. Separately\n            performed iPhone image analysis in Autopsy to examine application data, communication\n            records, and device metadata — covering mobile forensic workflows across both major\n            platforms.\n          </p>\n          <div class=\"tags\">\n            <span>Android Studio</span><span>Autopsy</span><span>Mobile Acquisition</span><span>iOS Forensics</span><span>Rooting</span>\n          </div>"}, "proj_18": {"id": "proj_18", "title": "Threat Hunting &amp; Incident Response with Velociraptor", "github": null, "body": "<p>\n            Deployed a Velociraptor server on Linux to support enterprise-scale endpoint visibility across\n            Windows and Linux hosts, then used it to investigate three distinct incident scenarios: a\n            potentially-unwanted-program (PUP) infection, an active bot/malware compromise, and a\n            two-stage RAT deployment. Used Velociraptor's hunting and artifact-collection capabilities to\n            trace each threat from initial foothold through to full compromise, identifying IOCs and\n            attacker behavior at each stage.\n          </p>\n          <div class=\"tags\">\n            <span>Velociraptor</span><span>Threat Hunting</span><span>EDR</span><span>Linux</span><span>Incident Response</span>\n          </div>"}, "proj_19": {"id": "proj_19", "title": "Network Scanner &amp; IDS — Real-Time Attack Detection Tool", "github": "https://github.com/manahylkhan/NetworkScnanner-IDS", "body": "<p>\n            Python-based network traffic monitoring tool built with Scapy that sniffs live traffic on a chosen\n            interface and detects common network-layer attacks in real time. Implements detection logic for\n            ARP spoofing (multiple MACs resolving to one IP), DNS spoofing (responses from untrusted\n            sources), DoS attacks (packet-rate thresholds per IP), DDoS / SYN flood attacks (half-open\n            connection tracking), and port scanning — including alerts when known vulnerable ports\n            (21, 22, 80, etc.) are probed. Generates real-time console alerts for any suspicious activity detected.\n          </p>\n          <div class=\"tags\">\n            <span>Python</span><span>Scapy</span><span>IDS</span><span>ARP/DNS Spoofing Detection</span><span>DoS/DDoS Detection</span><span>Port Scan Detection</span>\n          </div>"}, "proj_20": {"id": "proj_20", "title": "Windows 7 — EternalBlue (MS17-010) Exploitation &amp; Post-Exploitation", "github": null, "body": "<p>\n            Performed a full penetration test against a Windows 7 VM target in an isolated lab network.\n            Started with network discovery and OS fingerprinting via Nmap to identify the host and confirm\n            the Windows 7 target, then enumerated SMB shares and checked for SMBv1 exposure.\n            Vulnerability scanning with Greenbone/Nessus and targeted SMB checks confirmed the host\n            was vulnerable to the MS17-010 (EternalBlue) class of SMB vulnerabilities. Exploited the\n            vulnerability via Metasploit to gain a Meterpreter session with NT AUTHORITY\\\\SYSTEM\n            privileges — full SYSTEM-level compromise. In post-exploitation, dumped the SAM database to\n            extract password hashes, cracked the recovered hashes offline, gathered network configuration\n            and host information, and enumerated other reachable systems on the network for potential\n            lateral movement. Documented remediation: apply MS17-010 patches, disable SMBv1, and\n            segment legacy hosts from the rest of the network.\n          </p>\n          <div class=\"tags\">\n            <span>Windows 7</span><span>EternalBlue / MS17-010</span><span>Metasploit</span><span>Meterpreter</span><span>SAM Dump</span><span>Hash Cracking</span><span>Greenbone / Nessus</span>\n          </div>"}, "proj_21": {"id": "proj_21", "title": "Kioptrix (VulnHub) — Full Box Compromise via Dual Exploitation Paths", "github": null, "body": "<p>\n            Performed a complete compromise of the Kioptrix VulnHub machine, following a full\n            enumeration-to-root workflow. Discovered the target with Netdiscover, then ran Nmap version\n            and OS detection scans to identify an outdated Apache server with mod_ssl on ports 80/443\n            and a vulnerable Samba 2.2.1a service on port 139. Used Nikto for web vulnerability scanning,\n            WAFW00F to confirm no WAF was present, and curl to grab service banners. Searchsploit\n            identified public exploits for both mod_ssl and the Samba version; Gobuster enumerated hidden\n            web directories, and Enum4linux, smbclient, and rpcclient confirmed anonymous SMB access\n            was permitted, exposing user accounts. Exploited the mod_ssl vulnerability (compiling and\n            running a public OpenSSL exploit with specific target-type flags) to gain an initial non-root\n            shell, then used a Samba 2.2.1a exploit via Metasploit as a second path to shell access. From\n            there, dumped /etc/passwd and /etc/shadow to enumerate users (root, john, harold) and\n            extract password hashes, and demonstrated privilege escalation by resetting a user password\n            to gain full system access — achieving complete compromise through two independent\n            vulnerable services.\n          </p>\n          <div class=\"tags\">\n            <span>Nmap</span><span>Nikto</span><span>Searchsploit</span><span>Gobuster</span><span>Enum4linux</span><span>Metasploit</span><span>mod_ssl Exploit</span><span>Samba Exploit</span><span>VulnHub</span>\n          </div>"}, "proj_22": {"id": "proj_22", "title": "Mobile Application Security — Static &amp; Dynamic Analysis", "github": null, "body": "<p>\n            Performed static and dynamic security analysis on intentionally vulnerable Android\n            applications (including DIVA and a sample APK downloaded for testing). For static analysis,\n            deployed MobSF and uploaded the APK for automated assessment — reviewing the overall\n            security score, decompiled source via jadx, application permissions (flagging dangerous\n            permissions like camera and external storage access), exported activities and broadcast\n            receivers left unprotected, manifest misconfigurations (backup enabled, insecure network\n            security config allowing cleartext traffic), and certificate/signing analysis including exposure\n            to the Janus vulnerability on older signature schemes. For dynamic analysis, ran the\n            application in an Android Studio emulator, configured the device's proxy to route traffic\n            through Burp Suite, and intercepted live HTTP requests — including login credentials\n            submitted in plaintext over an insecure connection — to identify runtime data handling\n            issues not visible from static analysis alone.\n          </p>\n          <div class=\"tags\">\n            <span>MobSF</span><span>Burp Suite</span><span>Android Studio Emulator</span><span>APK Analysis</span><span>Manifest Analysis</span><span>Traffic Interception</span>\n          </div>"}, "proj_23": {"id": "proj_23", "title": "Threat Intelligence &amp; SIEM/SOAR Monitoring Platform", "github": null, "body": "<p>\n            Built and configured a centralized SOC monitoring and threat intelligence environment integrating\n            Wazuh SIEM, ELK Stack, OpenCTI, and IRIS SOAR for real-time alert correlation and incident\n            investigation. Implemented IOC ingestion, log aggregation, threat dashboards, and automated\n            response playbooks simulating enterprise-grade SOC operations.\n          </p>\n          <div class=\"tags\">\n            <span>Wazuh</span><span>ELK Stack</span><span>OpenCTI</span><span>IRIS</span><span>Kibana</span>\n          </div>"}, "proj_24": {"id": "proj_24", "title": "Real-Time SOC Analytics Pipeline", "github": "https://github.com/manahylkhan/KafkaWithIBMQRadar", "body": "<p>\nEnd-to-end real-time security analytics pipeline that ingests vulnerability scan data and threat\nintelligence, enriches it using Kafka Streams, forwards correlated events to a SIEM-style system\n(QRadar simulation), and applies ML-based anomaly detection — closely mirroring how modern SOCs\nprocess large-scale security telemetry at scale.\n</p>\n<p>\nBuilt a multi-broker Kafka environment (Zookeeper + Kafka + Kafka UI) in Docker. Designed 7 Kafka\ntopics covering the full pipeline: <code>vulnerability-scans</code>, <code>threat-intel</code>,\n<code>enriched-vulnerabilities</code>, <code>qradar-input</code>, <code>ml-input</code>,\n<code>ml-output</code>, and <code>remediation-actions</code>. Two Python producers simulate\nreal-time vulnerability scanner output (100+ CVE events) and IOC-based threat intelligence feeds.\nA Kafka Streams (Faust) enrichment layer joins vulnerability events with threat intel in real time,\nproducing enriched records with exploitability context forwarded to the SIEM and ML inputs.\nThe QRadar simulation implements a Python-based detection rules engine — critical CVE detection,\nthreat intel matching, SSH brute-force detection, multi-event correlation chains — generating\nreal-time security offenses. An Isolation Forest ML model trains on baseline events and detects\nhigh-risk anomalies beyond static rules, publishing results to the output stream.\n</p>\n<div class=\"tags\"><span>Apache Kafka</span><span>Kafka Streams / Faust</span><span>IBM QRadar Simulation</span><span>Isolation Forest (ML)</span><span>Docker</span><span>Python</span><span>SIEM Detection Engineering</span><span>Threat Intelligence</span><span>Real-Time Pipelines</span></div>"}, "proj_25": {"id": "proj_25", "title": "Active Directory Attack &amp; Defense Lab", "github": "https://github.com/manahylkhan/ActiveDirectorySecurityLab-OffensiveAttackSimulation", "body": "<p>\n            Built a controlled Active Directory lab from scratch — installed and configured AD Domain\n            Services and DNS on a Windows Server domain controller, created the domain (manahil.local)\n            with custom users, groups, and service accounts, then joined a Windows 10 client to the\n            domain. From a Kali Linux attack box, executed four full attack chains: LLMNR/NBT-NS\n            poisoning with Responder to capture NTLMv2 hashes when the victim mistypes a share or\n            hostname; an SMB relay attack using ntlmrelayx (with SMB signing disabled and SMB serving\n            turned off in Responder) to relay captured authentication and gain a controlled session as the\n            victim; Kerberoasting using impacket-GetUserSPNs against a custom SPN-registered service\n            account (svc_sql, registered via setspn) to extract a crackable TGS ticket; and AS-REP Roasting\n            using GetNPUsers against accounts configured with \"Do not require Kerberos\n            preauthentication\" to retrieve and crack AS-REP hashes for all such users. Mapped each\n            technique to MITRE ATT&amp;CK and proposed defensive controls (enabling SMB signing,\n            enforcing Kerberos pre-authentication, monitoring for LLMNR/NBT-NS traffic).\n          </p>\n          <div class=\"tags\">\n            <span>Impacket</span><span>Responder</span><span>Kerberos</span><span>Windows Server</span><span>Active Directory</span><span>Lateral Movement</span>\n          </div>"}, "proj_26": {"id": "proj_26", "title": "Infiltrator's Eye — Endpoint Forensic Monitoring Framework", "github": "https://github.com/manahylkhan/infiltratorsEye", "body": "<p>\n            Forensic monitoring framework for controlled lab environments, collecting endpoint telemetry —\n            system activity, screenshots, clipboard events, audit artifacts — for DFIR analysis, with secure\n            event collection and alerting workflows for incident investigation and behavioral monitoring.\n          </p>\n          <div class=\"tags\">\n            <span>Python</span><span>System Monitoring</span><span>SMTP</span><span>DFIR</span>\n          </div>"}, "proj_27": {"id": "proj_27", "title": "Computer Networks — Full Lab Coursework", "github": null, "body": "<p>\n            Completed a 16-lab semester sequence covering core networking protocols and infrastructure:\n            packet analysis with Wireshark (HTTP, DNS, TCP, UDP), socket programming, and Cisco Packet\n            Tracer-based network design covering DHCP, static and dynamic routing, VLSM subnetting,\n            NAT configuration, RIP/OSPF/EIGRP dynamic routing protocols, wireless network setup, and\n            IPv4 access control lists with firewall rules to allow legitimate traffic and block malicious traffic.\n          </p>\n          <div class=\"tags\">\n            <span>Wireshark</span><span>Packet Tracer</span><span>Socket Programming</span><span>DHCP / VLSM</span><span>OSPF / EIGRP / RIP</span><span>NAT &amp; ACLs</span><span>Firewall Configuration</span>\n          </div>"}, "proj_28": {"id": "proj_28", "title": "CTI-SIEM Integration — OpenCTI + Wazuh (National CERT Pakistan)", "github": null, "body": "<p>Built during the Threat Intelligence internship at National CERT Pakistan. Automated threat feed ingestion from OpenCTI into Wazuh SIEM, enriching real-time alerts with CTI context — IOCs, threat actor profiles, and campaign data — to accelerate analyst triage. Integrated ELK Stack for log correlation and IRIS DFIR for incident case management.</p><div class=\"tags\"><span>OpenCTI</span><span>Wazuh</span><span>ELK Stack</span><span>IRIS DFIR</span><span>Threat Intelligence</span><span>SIEM</span></div>"}, "proj_29": {"id": "proj_29", "title": "Insider Threat Detection via Behavior Analysis", "github": null, "body": "<p>Parses Windows Security Event Logs to build a behavioral baseline per user and flag anomalies: after-hours logins, sudden privilege escalation attempts, and unusual file access spikes. Generates structured reports with suspicious event timelines to support threat hunting and UEBA workflows.</p><div class=\"tags\"><span>Python</span><span>Windows Event Logs</span><span>UEBA</span><span>Threat Hunting</span><span>Behavioral Analysis</span></div>"}, "proj_30": {"id": "proj_30", "title": "Malware Detection Model — ML-Based Log Analysis", "github": null, "body": "<p>End-to-end malware detection pipeline: preprocessed system event logs and extracted behavioral features, then trained a Random Forest classifier to identify malicious activity from benign baselines. Evaluated with precision/recall metrics and confusion matrix analysis.</p><div class=\"tags\"><span>Python</span><span>scikit-learn</span><span>Random Forest</span><span>Feature Engineering</span><span>ML</span></div>"}, "proj_31": {"id": "proj_31", "title": "Linux Weak Permissions Scanner", "github": "https://github.com/manahylkhan/weakPermissionScanner", "body": "<p>Python-based privilege escalation auditing tool for Linux systems. Automatically scans for SUID/SGID binaries, misconfigured sudo NOPASSWD rules, and world-writable systemd service files. Outputs a prioritized report of findings to support security hardening.</p><div class=\"tags\"><span>Python</span><span>Linux</span><span>Privilege Escalation</span><span>SUID</span><span>sudo Misconfig</span><span>Security Hardening</span></div>"}, "proj_32": {"id": "proj_32", "title": "Phishing Web Application Simulation", "github": null, "body": "<p>Designed and deployed a controlled phishing simulation platform using GoPhish. Created realistic campaigns, tracked click-through and credential submission rates, and ran post-assessment comparisons — achieving a 40% improvement in user phishing detection rates after training.</p><div class=\"tags\"><span>GoPhish</span><span>Social Engineering</span><span>Security Awareness</span><span>Phishing Simulation</span></div>"}, "proj_33": {"id": "proj_33", "title": "Web Vulnerability Lab — DVWA &amp; Metasploitable 2", "github": null, "body": "<p>Hands-on DAST and SAST testing lab using DVWA and Metasploitable 2. Exploited SQL injection, XSS, CSRF, command injection, file inclusion, and IDOR vulnerabilities using Burp Suite and SQLMap, with structured mitigation strategies for each finding.</p><div class=\"tags\"><span>DVWA</span><span>Metasploitable 2</span><span>Burp Suite</span><span>SQLMap</span><span>Metasploit</span><span>DAST / SAST</span></div>"}, "proj_34": {"id": "proj_34", "title": "IDS via Socket Programming", "github": null, "body": "<p>Lightweight intrusion detection system using a client-server architecture and Python socket programming. Monitors login attempts, applies threshold-based detection to flag brute-force behavior in real time. Built for Parallel &amp; Distributed Computing coursework.</p><div class=\"tags\"><span>Python</span><span>Socket Programming</span><span>IDS</span><span>Distributed Computing</span><span>Network Security</span></div>"}, "proj_35": {"id": "proj_35", "title": "DDoS Detection with OpenMP — Parallel Traffic Analysis", "github": null, "body": "<p>Hybrid DDoS detection combining Python + Scapy for real-time packet sniffing with C++ + OpenMP for parallel log analysis. Python flags high-rate source IPs; C++ processes large log files in parallel to identify DDoS signatures at scale.</p><div class=\"tags\"><span>C++</span><span>OpenMP</span><span>Python</span><span>Scapy</span><span>Parallel Computing</span><span>DDoS Detection</span></div>"}, "proj_36": {"id": "proj_36", "title": "FaceBlueIn — Real-Time Face Recognition &amp; Attendance System", "github": null, "body": "<p>Real-time face recognition and automated attendance logging using OpenCV, FaceNet embeddings, and Dlib. Accurately identifies individuals across variable lighting, logs attendance with timestamps, and handles multiple faces per frame.</p><div class=\"tags\"><span>Python</span><span>OpenCV</span><span>FaceNet</span><span>Dlib</span><span>Computer Vision</span><span>Deep Learning</span></div>"}, "proj_37": {"id": "proj_37", "title": "FaceBlurInRealTime — GDPR-Compliant Facial Anonymization", "github": null, "body": "<p>Real-time facial anonymization using OpenCV with GPU acceleration and OpenMP-based parallel processing to blur faces across live video streams. Designed for GDPR-compliant video pipelines with distributed multi-stream support via sockets.</p><div class=\"tags\"><span>Python</span><span>OpenCV</span><span>OpenMP</span><span>GPU Acceleration</span><span>GDPR Compliance</span><span>Computer Vision</span></div>"}, "proj_38": {"id": "proj_38", "title": "E-Shopping Hub — Java Desktop E-Commerce App", "github": "https://github.com/manahylkhan/ecommerceUsingJFrame", "body": "<p>Java desktop e-commerce application with a JFrame GUI implementing OOP design principles across product browsing, cart management, and checkout.</p><div class=\"tags\"><span>Java</span><span>JFrame</span><span>OOP</span><span>GUI</span></div>"}, "proj_39": {"id": "proj_39", "title": "Unbeatable TicTacToe — Minimax AI", "github": "https://github.com/manahylkhan/TicTacToe", "body": "<p>Python TicTacToe with an unbeatable Minimax AI that evaluates all possible future board states and plays optimally — cannot be beaten, only drawn.</p><div class=\"tags\"><span>Python</span><span>Minimax</span><span>Game AI</span><span>Algorithms</span></div>"}, "proj_40": {"id": "proj_40", "title": "ToDoListCpp — Stack-Based Task Manager", "github": "https://github.com/manahylkhan/ToDoListCpp", "body": "<p>Command-line ToDo list in C++ using a stack data structure for LIFO task tracking with push/pop operations.</p><div class=\"tags\"><span>C++</span><span>Data Structures</span><span>Stack</span><span>CLI</span></div>"}, "proj_41": {"id": "proj_41", "title": "Real-Time Security Analytics Pipeline — Kafka, SIEM &amp; ML", "github": "https://github.com/manahylkhan/KafkaWithIBMQRadar", "body": "<p>\nEnd-to-end real-time security analytics pipeline that ingests vulnerability scan data and threat\nintelligence, enriches it using Kafka Streams, forwards correlated events to a SIEM-style system\n(QRadar simulation), and applies ML-based anomaly detection — closely mirroring how modern SOCs\nprocess large-scale security telemetry at scale.\n</p>\n<p>\nBuilt a multi-broker Kafka environment in Docker. Designed 7 Kafka topics covering the full pipeline:\nvulnerability-scans, threat-intel, enriched-vulnerabilities, qradar-input, ml-input, ml-output,\nand remediation-actions. Two Python producers simulate real-time vulnerability scanner output (100+\nCVE events) and IOC-based threat intelligence feeds. A Kafka Streams (Faust) enrichment layer joins\nvulnerability events with threat intel in real time. The QRadar simulation implements a Python-based\ndetection rules engine — critical CVE detection, threat intel matching, SSH brute-force detection,\nmulti-event correlation chains. An Isolation Forest ML model trains on baseline events and flags\nhigh-risk anomalies beyond static rules.\n</p>\n<div class=\"tags\"><span>Apache Kafka</span><span>Kafka Streams / Faust</span><span>IBM QRadar Simulation</span><span>Isolation Forest (ML)</span><span>Docker</span><span>Python</span><span>SIEM Detection Engineering</span><span>Threat Intelligence</span><span>Real-Time Pipelines</span></div>"}};
+
+const CERT_DATA = {"cert_0": {"id": "cert_0", "name": "Certified LLM Security Professional", "issuer": "Red Team Leaders", "url": "https://courses.redteamleaders.com/exam-completion/c59c70fd9c24fe07", "cred_id": null, "skills": ["OWASP LLM Top 10 Risks", "AI Application Security", "AI Agent & MCP Architecture", "AI Governance & Risk Management", "Privacy & Data Protection in AI", "Secure AI Engineering Practices"]}, "cert_1": {"id": "cert_1", "name": "Computer Hacking Forensic Investigator (CHFI)", "issuer": "EC-Council", "url": null, "cred_id": "ECC8470521936", "skills": ["Digital Forensics", "Incident Response", "Malware Analysis", "Network Forensics", "Evidence Acquisition", "CHFI Certified"]}, "cert_2": {"id": "cert_2", "name": "Certified Threat Intelligence & Governance Analyst (CTIGA)", "issuer": "Red Team Leaders", "url": "https://courses.redteamleaders.com/exam-completion/d55667c5a0fe6b65", "cred_id": null, "skills": ["Governance, Risk Management, and Compliance (GRC)", "Cyber Threat Intelligence (CTI)"]}, "cert_3": {"id": "cert_3", "name": "Certified Ransomware Protection Officer (CRPO)", "issuer": "EU Cyber Academy", "url": null, "cred_id": "6947d7a0f3c6b5796b0cc145", "skills": ["Ransomware Risk Assessment", "Cybersecurity Risk Mitigation", "Incident Response & Recovery Planning", "Zero Trust Security Principles", "Audit, Logging & Compliance"]}, "cert_4": {"id": "cert_4", "name": "Certified SME Cybersecurity Officer (CSCSO)", "issuer": "EU Cyber Academy", "url": null, "cred_id": "6947db2be7407a98bc07268c", "skills": ["Cloud Security", "Identity and Access Management (IAM)", "GRC", "Cyber Risk Management", "Ransomware Awareness & Mitigation", "Information Security Policies & Procedures", "NIST CSF"]}, "cert_5": {"id": "cert_5", "name": "Digital Forensics & Incident Response (DFIR)", "issuer": "Udemy", "url": null, "cred_id": "UC-ca213080-42e3-4536-8023-aae7c2d557d3", "skills": ["Digital Forensics", "Incident Response", "Memory Forensics", "Disk Forensics", "Network Forensics", "Evidence Preservation"]}, "cert_6": {"id": "cert_6", "name": "Reverse Engineering & Malware Analysis", "issuer": "Udemy", "url": "https://www.udemy.com/certificate/UC-afc16c51-2d5e-4639-84e5-c0d6dfe1996c/", "cred_id": "UC-afc16c51-2d5e-4639-84e5-c0d6dfe1996c", "skills": ["Reverse Engineering", "Malware Analysis", "Static Analysis", "Dynamic Analysis", "IDA Pro", "Ghidra", "Assembly Language"]}, "cert_7": {"id": "cert_7", "name": "Computer Forensics & Digital Forensics", "issuer": "Udemy", "url": null, "cred_id": "UC-6f1bc9eb-1c99-4517-9f92-8c0fleOf7919", "skills": ["Digital Forensics", "Computer Forensics", "File System Analysis", "Evidence Collection", "Forensic Imaging"]}, "cert_8": {"id": "cert_8", "name": "WordPress Security", "issuer": "Udemy", "url": null, "cred_id": "UC-b8e8dcd6-e1fa-4453-a8ad-e9a2913c4064", "skills": ["WordPress Security", "Web Application Security", "CMS Hardening", "Plugin Vulnerability Assessment"]}, "cert_9": {"id": "cert_9", "name": "Certified Phishing Prevention Specialist (CPPS)", "issuer": "Hack&Fix", "url": null, "cred_id": "8247-5961-7917-6997", "skills": ["Phishing Detection", "Security Awareness", "Social Engineering Defense", "Incident Reporting", "Risk Awareness", "Compliance Awareness"]}, "cert_10": {"id": "cert_10", "name": "Information Security Associate", "issuer": "SkillFront", "url": null, "cred_id": "93943484501618", "skills": ["Information Security Management System (ISMS)", "SOA Security", "Regulatory Compliance", "Legal Compliance", "GRC"]}, "cert_11": {"id": "cert_11", "name": "ISO/IEC 20000 IT Service Management Associate", "issuer": "SkillFront", "url": null, "cred_id": "62889869049808", "skills": ["IT Service Management", "ITIL Framework", "Service Delivery", "ISO/IEC 20000"]}, "cert_12": {"id": "cert_12", "name": "Digital Forensics & Ethical Hacking", "issuer": "NAVTTC", "url": "http://nsis.navttc.gov.pk/validate/118222", "cred_id": null, "skills": ["Digital Forensics", "Ethical Hacking", "Network Security", "Vulnerability Assessment"]}, "cert_13": {"id": "cert_13", "name": "Introduction to Cybersecurity", "issuer": "Cisco Networking Academy", "url": "https://www.credly.com/go/ucU6PxGm", "cred_id": null, "skills": ["Cybersecurity Fundamentals", "Network Security", "Threat Awareness", "Cisco Certified"]}, "cert_14": {"id": "cert_14", "name": "Digital Forensics", "issuer": "Security Blue Team", "url": null, "cred_id": "887430334", "skills": ["Digital Forensics", "Evidence Analysis", "Forensic Investigation", "Blue Team Operations"]}, "cert_15": {"id": "cert_15", "name": "Network Analysis", "issuer": "Security Blue Team", "url": null, "cred_id": "325317500", "skills": ["Network Analysis", "Packet Analysis", "Wireshark", "Traffic Inspection", "Network Forensics", "Threat Detection"]}, "cert_16": {"id": "cert_16", "name": "OSINT", "issuer": "Security Blue Team", "url": null, "cred_id": "154509735", "skills": ["Open Source Intelligence (OSINT)", "Reconnaissance", "Intelligence Gathering", "Digital Footprint Analysis", "Threat Intelligence"]}, "cert_17": {"id": "cert_17", "name": "Steganography", "issuer": "Security Blue Team", "url": null, "cred_id": null, "skills": ["Steganography", "Digital Forensics", "Hidden Data Detection", "Image & Audio Analysis"]}, "cert_18": {"id": "cert_18", "name": "Introduction to Programming Using Python", "issuer": "Cybprox", "url": null, "cred_id": null, "skills": ["Python", "Programming Fundamentals", "Scripting", "Automation", "Data Structures"]}};
+
+function openProjectModal(id) {
+  const data = PROJECT_DATA[id];
+  if (!data) return;
+  document.getElementById('modalTitle').innerHTML = data.title;
+  const githubEl = document.getElementById('modalGithub');
+  if (data.github) {
+    githubEl.innerHTML = '<a class="project-link" href="' + data.github + '" target="_blank" rel="noopener">view repo →</a>';
+  } else {
+    githubEl.innerHTML = '';
+  }
+  document.getElementById('modalBody').innerHTML = data.body;
+  const overlay = document.getElementById('projectModalOverlay');
+  overlay.classList.add('open');
+  document.getElementById('projectModalBox').scrollTop = 0;
+  overlay.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeProjectModal() {
+  document.getElementById('projectModalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeProjectModalOnOverlay(e) {
+  if (e.target.id === 'projectModalOverlay') closeProjectModal();
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeProjectModal();
+});
+
+function openCertModal(id) {
+  const cert = CERT_DATA[id];
+  if (!cert) return;
+  document.getElementById('modalTitle').innerHTML = cert.name;
+  const githubEl = document.getElementById('modalGithub');
+  let metaHtml = '<p class="cert-modal-issuer">Issued by ' + cert.issuer + '</p>';
+  if (cert.cred_id) metaHtml += '<p class="cert-modal-meta">Credential ID: ' + cert.cred_id + '</p>';
+  if (cert.url) metaHtml += '<p class="cert-modal-meta"><a href="' + cert.url + '" target="_blank" rel="noopener" class="project-link">View Certificate →</a></p>';
+  const skillTags = cert.skills.map(s => '<span>' + s + '</span>').join('');
+  githubEl.innerHTML = metaHtml;
+  document.getElementById('modalBody').innerHTML = '<div class="cert-modal-skills">' + skillTags + '</div>';
+  const overlay = document.getElementById('projectModalOverlay');
+  overlay.classList.add('open');
+  overlay.scrollTop = 0;
+  document.getElementById('projectModalBox').scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+</script>
+
+</body>
+</html>
